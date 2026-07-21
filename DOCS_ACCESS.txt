@@ -1,0 +1,108 @@
+================================================================================
+                    📚 DOCUMENTAÇÃO - ACESSO RÁPIDO
+================================================================================
+
+🌐 ACESSO ONLINE (Recomendado):
+─────────────────────────────────────────────────────────────────────────────
+
+Quando o app estiver rodando, abra no navegador:
+
+   http://localhost:8765/static/docs.html
+
+Ou em rede:
+
+   http://[seu-ip]:8765/static/docs.html
+
+Lá você vai ver 3 documentos lindos com links diretos:
+  ✅ Executive Summary (para decisores)
+  ✅ Roadmap Report (para planejamento)
+  ✅ Technical Integrations (para desenvolvimento)
+
+================================================================================
+
+📂 ACESSO LOCAL (Arquivos):
+─────────────────────────────────────────────────────────────────────────────
+
+Se preferir abrir direto no navegador (sem o app rodando):
+
+   app/static/docs/01_EXECUTIVE_SUMMARY.html
+   app/static/docs/02_ROADMAP_REPORT.html
+   app/static/docs/03_TECHNICAL_INTEGRATIONS.html
+
+Ou abra no explorador:
+   C:\Users\gnecc\Documents\novo app\app\static\docs\
+
+================================================================================
+
+📋 ARQUIVO DE REFERÊNCIA RÁPIDA:
+─────────────────────────────────────────────────────────────────────────────
+
+   ROADMAP_QUICK_REFERENCE.txt (na raiz do projeto)
+
+   Um sumário de 1 página com:
+   • O que temos hoje
+   • Timeline (Ago-Dez 2026)
+   • Integrações propostas
+   • ROI comparado
+   • Próximos passos
+
+================================================================================
+
+🚀 PASSOS PARA COMEÇAR:
+─────────────────────────────────────────────────────────────────────────────
+
+1. EXECUTAR O APP:
+   cd "C:\Users\gnecc\Documents\novo app"
+   python app/main.py
+
+2. ABRIR DOCUMENTAÇÃO:
+   → http://localhost:8765/static/docs.html
+
+3. ESCOLHER SEU DOCUMENTO:
+   - Executivo? → Executive Summary
+   - Planejador? → Roadmap Report
+   - Developer? → Technical Integrations
+
+4. COMPARTILHAR COM STAKEHOLDERS:
+   → Envie http://[seu-ip]:8765/static/docs.html
+
+================================================================================
+
+📊 ESTRUTURA DE ARQUIVOS:
+─────────────────────────────────────────────────────────────────────────────
+
+app/static/
+├── docs.html                    ← Índice principal (ABRA ISTO!)
+├── docs/
+│   ├── 01_EXECUTIVE_SUMMARY.html
+│   ├── 02_ROADMAP_REPORT.html
+│   └── 03_TECHNICAL_INTEGRATIONS.html
+└── [outros arquivos do app]
+
+docs/                            ← Também guardado aqui
+├── INDEX.md
+└── roadmap/
+    ├── README.md
+    ├── 01_EXECUTIVE_SUMMARY.html
+    ├── 02_ROADMAP_REPORT.html
+    └── 03_TECHNICAL_INTEGRATIONS.html
+
+================================================================================
+
+⏱️ TEMPO DE LEITURA:
+─────────────────────────────────────────────────────────────────────────────
+
+ROADMAP_QUICK_REFERENCE.txt  →  1-2 min (sumário rápido)
+Executive Summary            →  5-10 min (apresentação)
+Roadmap Report              →  20-30 min (planejamento)
+Technical Integrations      →  Referência (durante dev)
+
+================================================================================
+
+✅ PRONTO PARA USAR!
+
+Abra:  http://localhost:8765/static/docs.html
+
+Aproveite! 🚀
+
+================================================================================

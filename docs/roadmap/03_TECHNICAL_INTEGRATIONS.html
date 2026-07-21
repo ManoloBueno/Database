@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banco de Links - Integrations Technical Spec</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #252526;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            opacity: 0.95;
+            font-size: 1.05em;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        section {
+            margin-bottom: 50px;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            color: #4ec9b0;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4ec9b0;
+        }
+
+        h3 {
+            font-size: 1.3em;
+            color: #9cdcfe;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            font-size: 1.1em;
+            color: #ce9178;
+            margin-top: 18px;
+            margin-bottom: 12px;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            border: 1px solid #3e3e42;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-size: 0.9em;
+        }
+
+        .code-block code {
+            color: #ce9178;
+        }
+
+        .keyword { color: #569cd6; }
+        .string { color: #ce9178; }
+        .number { color: #b5cea8; }
+        .function { color: #dcdcaa; }
+        .comment { color: #6a9955; }
+
+        .endpoint {
+            background: #2d2d30;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .endpoint-method {
+            color: #4ec9b0;
+            font-weight: bold;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .endpoint-path {
+            color: #ce9178;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #3e3e42;
+        }
+
+        .table th {
+            background: #2d2d30;
+            color: #4ec9b0;
+            font-weight: bold;
+        }
+
+        .table tr:hover {
+            background: #2d2d30;
+        }
+
+        .flow-diagram {
+            background: #2d2d30;
+            border: 1px solid #3e3e42;
+            padding: 20px;
+            border-radius: 4px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .warning {
+            background: #5c4a1a;
+            border-left: 4px solid #d7ba11;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            color: #dcdcdc;
+        }
+
+        .success {
+            background: #1a4d1a;
+            border-left: 4px solid #4ec9b0;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            color: #dcdcdc;
+        }
+
+        .error {
+            background: #4d1a1a;
+            border-left: 4px solid #f48771;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            color: #dcdcdc;
+        }
+
+        .dependency {
+            background: #2d2d30;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .dependency strong {
+            color: #4ec9b0;
+        }
+
+        .footer {
+            background: #2d2d30;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #3e3e42;
+            color: #858585;
+            font-size: 0.9em;
+        }
+
+        .toc {
+            background: #2d2d30;
+            border: 1px solid #3e3e42;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+        }
+
+        .toc ul {
+            list-style: none;
+            margin: 10px 0 0 0;
+        }
+
+        .toc li {
+            padding: 5px 0;
+        }
+
+        .toc a {
+            color: #9cdcfe;
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            color: #4ec9b0;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔗 Banco de Links - Especificação Técnica de Integrações</h1>
+            <p>Odoo CRM | SAP-GUI | Arquitetura de Integrações</p>
+        </div>
+
+        <div class="content">
+            <!-- TABLE OF CONTENTS -->
+            <section class="toc">
+                <strong>📋 Índice Rápido</strong>
+                <ul>
+                    <li>1. <a href="#arch">Arquitetura Geral de Integrações</a></li>
+                    <li>2. <a href="#odoo">Integração Odoo CRM</a></li>
+                    <li>3. <a href="#sap">Integração SAP-GUI</a></li>
+                    <li>4. <a href="#security">Segurança & Autenticação</a></li>
+                    <li>5. <a href="#error">Tratamento de Erros</a></li>
+                    <li>6. <a href="#deploy">Deployment & Monitoramento</a></li>
+                </ul>
+            </section>
+
+            <!-- SEÇÃO 1: ARQUITETURA GERAL -->
+            <section id="arch">
+                <h2>1️⃣ Arquitetura Geral de Integrações</h2>
+
+                <h3>Visão Geral</h3>
+                <p>
+                    O Banco de Links usa um <strong>padrão event-driven com webhooks</strong> para integrar com sistemas externos.
+                    Cada integração funciona de forma assíncrona para não bloquear a API principal.
+                </p>
+
+                <div class="flow-diagram">┌─────────────────────────────────────────────────────┐
+│        BANCO DE LINKS (FastAPI)                     │
+│  ┌──────────────────────────────────────────────┐  │
+│  │  API Core                                    │  │
+│  │  ├─ POST /links (criar)                     │  │
+│  │  ├─ PUT /links/{id} (atualizar)             │  │
+│  │  └─ DELETE /links/{id} (deletar)            │  │
+│  └──────────────────────────────────────────────┘  │
+│           ↓                                         │
+│  ┌──────────────────────────────────────────────┐  │
+│  │  Event Bus (Redis/RabbitMQ)                 │  │
+│  │  Fila de eventos para processamento async   │  │
+│  └──────────────────────────────────────────────┘  │
+│      ↙        ↓         ↘        ↗                  │
+└─────────────────────────────────────────────────────┘
+       ↓        ↓         ↓        ↓
+   ┌───────────────────────────────────────┐
+   │   Odoo CRM   │  SAP-GUI  │  Slack    │
+   │   (webhook)  │  (API)    │  (webhook)│
+   └───────────────────────────────────────┘
+                </div>
+
+                <h3>Componentes Principais</h3>
+                <table class="table">
+                    <tr>
+                        <th>Componente</th>
+                        <th>Responsabilidade</th>
+                        <th>Tecnologia</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Integration Worker</strong></td>
+                        <td>Processa eventos e sincroniza com sistemas externos</td>
+                        <td>Celery + Redis</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Event Bus</strong></td>
+                        <td>Fila de mensagens para comunicação assíncrona</td>
+                        <td>Redis Pub/Sub ou RabbitMQ</td>
+                    </tr>
+                    <tr>
+                        <td><strong>API Gateway</strong></td>
+                        <td>Autentica e roteia requests para integrações</td>
+                        <td>FastAPI + OAuth2</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Webhook Receiver</strong></td>
+                        <td>Recebe eventos de sistemas externos</td>
+                        <td>FastAPI WebSocket</td>
+                    </tr>
+                </table>
+
+                <h3>Estrutura de Diretórios</h3>
+                <div class="code-block">
+app/
+├── integrations/
+│   ├── __init__.py
+│   ├── base.py              # Classe base para integrações
+│   ├── odoo/
+│   │   ├── __init__.py
+│   │   ├── client.py        # Cliente Odoo RPC
+│   │   ├── models.py        # Mapping de dados
+│   │   └── sync.py          # Lógica de sincronização
+│   ├── sap/
+│   │   ├── __init__.py
+│   │   ├── client.py        # Cliente SAP-GUI/RFC
+│   │   ├── models.py        # Mapping de dados
+│   │   └── sync.py          # Lógica de sincronização
+│   └── webhooks.py          # Handlers de webhooks
+├── workers/
+│   ├── __init__.py
+│   ├── celery.py            # Configuração Celery
+│   └── tasks.py             # Tasks assíncronas
+└── models.py                # SQLAlchemy models
+                </div>
+            </section>
+
+            <!-- SEÇÃO 2: ODOO CRM -->
+            <section id="odoo">
+                <h2>2️⃣ Integração Odoo CRM</h2>
+
+                <h3>Objetivo</h3>
+                <p>
+                    Sincronizar links com pipeline de vendas do Odoo. Quando um link é criado/atualizado,
+                    cria ou atualiza uma <strong>Lead/Opportunity</strong> correspondente no Odoo.
+                </p>
+
+                <h3>Fluxo de Dados</h3>
+                <div class="flow-diagram">Banco de Links         Odoo CRM
+       ↓                  ↓
+ 1. Usuário cria link
+       ↓
+ 2. API valida e salva no DB
+       ↓
+ 3. Emite evento "link.created"
+       ↓
+ 4. Event Bus recebe
+       ↓
+ 5. Worker assíncrono processa
+       ↓
+ 6. Chama Odoo RPC API
+       ↓
+ 7. Cria Lead/Opportunity
+       ↓
+ 8. Sincroniza tags como "tags" do Odoo
+       ↓
+ 9. Persiste Odoo ID no Banco de Links
+       ↓
+10. Usuario vê "Synced ✓" no UI
+                </div>
+
+                <h3>Configuração Odoo</h3>
+                <p><strong>Pré-requisitos:</strong></p>
+                <div class="dependency">
+                    <strong>✓ Odoo 14+</strong> com módulo CRM ativado<br/>
+                    <strong>✓ Usuário XML-RPC</strong> com permissões de criar leads<br/>
+                    <strong>✓ Acesso SSH</strong> para configurar credenciais
+                </div>
+
+                <h3>Environment Variables</h3>
+                <div class="code-block">
+# .env
+ODOO_URL=https://odoo.empresa.com.br
+ODOO_DATABASE=producao
+ODOO_USERNAME=banco_links_user
+ODOO_PASSWORD=senha_segura_aqui
+ODOO_SYNC_ENABLED=true
+ODOO_DEFAULT_TEAM_ID=1  # Equipe de vendas padrão
+                </div>
+
+                <h3>Cliente Odoo (app/integrations/odoo/client.py)</h3>
+                <div class="code-block">
+<span class="keyword">import</span> xmlrpc.client
+<span class="keyword">import</span> os
+<span class="keyword">from</span> typing <span class="keyword">import</span> Dict, List
+
+<span class="keyword">class</span> <span class="function">OdooClient</span>:
+    <span class="string">"""Cliente para Odoo RPC XML-RPC"""</span>
+
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>):
+        <span class="keyword">self</span>.url = os.getenv(<span class="string">"ODOO_URL"</span>)
+        <span class="keyword">self</span>.db = os.getenv(<span class="string">"ODOO_DATABASE"</span>)
+        <span class="keyword">self</span>.user = os.getenv(<span class="string">"ODOO_USERNAME"</span>)
+        <span class="keyword">self</span>.pwd = os.getenv(<span class="string">"ODOO_PASSWORD"</span>)
+
+        <span class="keyword">self</span>.uid = None
+        <span class="keyword">self</span>._authenticate()
+
+    <span class="keyword">def</span> <span class="function">_authenticate</span>(<span class="keyword">self</span>):
+        <span class="string">"""Autentica com Odoo"""</span>
+        common = xmlrpc.client.ServerProxy(
+            <span class="string">f"{self.url}/xmlrpc/2/common"</span>
+        )
+        <span class="keyword">self</span>.uid = common.authenticate(
+            <span class="keyword">self</span>.db, <span class="keyword">self</span>.user, <span class="keyword">self</span>.pwd, {}
+        )
+        <span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">self</span>.uid:
+            <span class="keyword">raise</span> Exception(<span class="string">"Odoo auth failed"</span>)
+
+    <span class="keyword">def</span> <span class="function">create_lead</span>(<span class="keyword">self</span>, data: Dict) → int:
+        <span class="string">"""Cria uma Lead no Odoo"""</span>
+        models = xmlrpc.client.ServerProxy(
+            <span class="string">f"{self.url}/xmlrpc/2/object"</span>
+        )
+
+        lead_id = models.execute_kw(
+            <span class="keyword">self</span>.db, <span class="keyword">self</span>.uid, <span class="keyword">self</span>.pwd,
+            <span class="string">'crm.lead'</span>, <span class="string">'create'</span>, [data]
+        )
+        <span class="keyword">return</span> lead_id
+
+    <span class="keyword">def</span> <span class="function">update_lead</span>(<span class="keyword">self</span>, lead_id: int, data: Dict):
+        <span class="string">"""Atualiza uma Lead no Odoo"""</span>
+        models = xmlrpc.client.ServerProxy(
+            <span class="string">f"{self.url}/xmlrpc/2/object"</span>
+        )
+
+        models.execute_kw(
+            <span class="keyword">self</span>.db, <span class="keyword">self</span>.uid, <span class="keyword">self</span>.pwd,
+            <span class="string">'crm.lead'</span>, <span class="string">'write'</span>, [[lead_id], data]
+        )
+                </div>
+
+                <h3>Modelo de Sincronização (app/integrations/odoo/models.py)</h3>
+                <div class="code-block">
+<span class="keyword">from</span> typing <span class="keyword">import</span> Dict
+
+<span class="keyword">class</span> <span class="function">LinkToOdooMapper</span>:
+    <span class="string">"""Mapeia Link do Banco para Lead no Odoo"""</span>
+
+    @staticmethod
+    <span class="keyword">def</span> <span class="function">link_to_lead</span>(link: Dict) → Dict:
+        <span class="string">"""Converte Link para Lead data"""</span>
+        <span class="keyword">return</span> {
+            <span class="string">"name"</span>: link[<span class="string">"titulo"</span>],
+            <span class="string">"description"</span>: link[<span class="string">"resumo"</span>],
+            <span class="string">"tag_ids"</span>: <span class="function">_get_or_create_tags</span>(link[<span class="string">"tags"</span>]),
+            <span class="string">"team_id"</span>: os.getenv(<span class="string">"ODOO_DEFAULT_TEAM_ID"</span>),
+            <span class="string">"website"</span>: link[<span class="string">"url"</span>],
+            <span class="string">"notes"</span>: <span class="string">f"Fonte: {link['plataforma']}\nData: {link['data']}"</span>,
+            <span class="string">"email_cc"</span>: <span class="string">"banco-links@empresa.com.br"</span>,
+        }
+                </div>
+
+                <h3>Task Celery de Sincronização</h3>
+                <div class="code-block">
+<span class="keyword">from</span> celery <span class="keyword">import</span> shared_task
+<span class="keyword">from</span> app.integrations.odoo.client <span class="keyword">import</span> OdooClient
+<span class="keyword">from</span> app.integrations.odoo.models <span class="keyword">import</span> LinkToOdooMapper
+
+@shared_task(bind=<span class="keyword">True</span>, max_retries=<span class="number">3</span>)
+<span class="keyword">def</span> <span class="function">sync_link_to_odoo</span>(self, link_id: int):
+    <span class="string">"""Sincroniza um link para Odoo"""</span>
+    <span class="keyword">try</span>:
+        <span class="comment"># Get link from DB</span>
+        link = db.query(Link).filter(Link.id == link_id).first()
+        <span class="keyword">if</span> <span class="keyword">not</span> link:
+            <span class="keyword">return</span>
+
+        <span class="comment"># Connect to Odoo</span>
+        odoo = OdooClient()
+        lead_data = LinkToOdooMapper.link_to_lead(link.to_dict())
+
+        <span class="comment"># Create or update lead</span>
+        <span class="keyword">if</span> link.odoo_lead_id:
+            odoo.update_lead(link.odoo_lead_id, lead_data)
+        <span class="keyword">else</span>:
+            odoo_id = odoo.create_lead(lead_data)
+            link.odoo_lead_id = odoo_id
+            db.commit()
+
+        logger.info(<span class="string">f"✓ Synced link {link_id} to Odoo"</span>)
+
+    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:
+        logger.error(<span class="string">f"✗ Failed to sync link {link_id}: {e}"</span>)
+        <span class="comment"># Retry com backoff exponencial</span>
+        <span class="keyword">self</span>.retry(exc=e, countdown=<span class="number">60</span> * (2 ** self.request.retries))
+                </div>
+
+                <h3>Endpoints da API para Odoo</h3>
+                <div class="endpoint">
+                    <span class="endpoint-method">POST</span>
+                    <span class="endpoint-path">/api/integrations/odoo/status</span>
+                </div>
+                <p>Retorna status da conexão com Odoo</p>
+                <div class="code-block">
+{
+  <span class="string">"connected"</span>: true,
+  <span class="string">"last_sync"</span>: <span class="string">"2026-08-21T10:30:00Z"</span>,
+  <span class="string">"synced_leads"</span>: <span class="number">245</span>,
+  <span class="string">"pending_sync"</span>: <span class="number">12</span>
+}
+                </div>
+
+                <div class="endpoint">
+                    <span class="endpoint-method">POST</span>
+                    <span class="endpoint-path">/api/integrations/odoo/sync/{link_id}</span>
+                </div>
+                <p>Força sincronização imediata de um link</p>
+
+                <div class="success">
+                    <strong>✓ Vantagens da Integração Odoo</strong><br/>
+                    • Sincronização bidirecional de oportunidades de venda<br/>
+                    • Tags do Banco de Links mapeadas como categorias de leads<br/>
+                    • Histórico de interações persistido<br/>
+                    • ROI de vendas rastreável
+                </div>
+            </section>
+
+            <!-- SEÇÃO 3: SAP-GUI -->
+            <section id="sap">
+                <h2>3️⃣ Integração SAP-GUI</h2>
+
+                <h3>Objetivo</h3>
+                <p>
+                    Enriquecer links com dados de SAP. Quando um link é criado em módulos SAP (MM, FI, HR),
+                    puxa dados relevantes automaticamente (tabelas, estruturas, campos específicos).
+                </p>
+
+                <h3>Fluxo de Dados</h3>
+                <div class="flow-diagram">Banco de Links              SAP-GUI
+       ↓                         ↓
+ 1. Link criado com tag "SAP"
+       ↓
+ 2. Event emitido
+       ↓
+ 3. Worker assíncrono ativa
+       ↓
+ 4. Conecta via RFC/BAPI
+       ↓
+ 5. Extrai metadados:
+       ├─ Módulo (MM/FI/HR)
+       ├─ Tabelas relacionadas
+       ├─ Estrutura de dados
+       └─ Campos principais
+       ↓
+ 6. Monta enriquecimento
+       ↓
+ 7. Salva metadados no Banco
+       ↓
+ 8. UI mostra "SAP Data ✓"
+                </div>
+
+                <h3>Configuração SAP</h3>
+                <div class="dependency">
+                    <strong>✓ SAP System</strong> com RFC habilitado<br/>
+                    <strong>✓ RFC User</strong> com permissões de leitura (PFCG: S_RFC_ADM)<br/>
+                    <strong>✓ Librfc32.dll</strong> (Windows) ou librfc.so (Linux)<br/>
+                    <strong>✓ nwrfc38</strong> ou <strong>pyrfc</strong> instalado
+                </div>
+
+                <h3>Environment Variables</h3>
+                <div class="code-block">
+# .env
+SAP_ASHOST=192.168.1.100      # IP do SAP Application Server
+SAP_SYSNR=01                   # System Number
+SAP_CLIENT=100                 # Client (Mandante)
+SAP_USER=BANCO_LINKS_USR
+SAP_PASSWORD=senha_segura
+SAP_LANG=EN
+SAP_SYNC_ENABLED=true
+
+# RFC Connection
+RFC_LIB_PATH=/opt/sap/nwrfcsdk/lib
+                </div>
+
+                <h3>Cliente SAP (app/integrations/sap/client.py)</h3>
+                <div class="code-block">
+<span class="keyword">import</span> pyrfc
+<span class="keyword">import</span> os
+<span class="keyword">from</span> typing <span class="keyword">import</span> Dict, List
+
+<span class="keyword">class</span> <span class="function">SAPClient</span>:
+    <span class="string">"""Cliente para SAP RFC"""</span>
+
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>):
+        <span class="keyword">self</span>.connection_params = {
+            <span class="string">"ashost"</span>: os.getenv(<span class="string">"SAP_ASHOST"</span>),
+            <span class="string">"sysnr"</span>: os.getenv(<span class="string">"SAP_SYSNR"</span>),
+            <span class="string">"client"</span>: os.getenv(<span class="string">"SAP_CLIENT"</span>),
+            <span class="string">"user"</span>: os.getenv(<span class="string">"SAP_USER"</span>),
+            <span class="string">"passwd"</span>: os.getenv(<span class="string">"SAP_PASSWORD"</span>),
+            <span class="string">"lang"</span>: <span class="string">"EN"</span>,
+        }
+        <span class="keyword">self</span>.conn = <span class="keyword">None</span>
+        <span class="keyword">self</span>._connect()
+
+    <span class="keyword">def</span> <span class="function">_connect</span>(<span class="keyword">self</span>):
+        <span class="string">"""Conecta ao SAP"""</span>
+        <span class="keyword">try</span>:
+            <span class="keyword">self</span>.conn = pyrfc.Connection(**<span class="keyword">self</span>.connection_params)
+            logger.info(<span class="string">"✓ Connected to SAP"</span>)
+        <span class="keyword">except</span> pyrfc.CommunicationError <span class="keyword">as</span> e:
+            logger.error(<span class="string">f"✗ SAP Connection Error: {e}"</span>)
+            <span class="keyword">raise</span>
+
+    <span class="keyword">def</span> <span class="function">get_table_info</span>(<span class="keyword">self</span>, table_name: str) → Dict:
+        <span class="string">"""Retorna info de uma tabela SAP"""</span>
+        <span class="keyword">try</span>:
+            result = <span class="keyword">self</span>.conn.call(<span class="string">'DD_GET_TABLE'</span>,
+                TABLE_NAME=table_name
+            )
+            <span class="keyword">return</span> result
+        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:
+            logger.error(<span class="string">f"✗ Failed to get table {table_name}: {e}"</span>)
+            <span class="keyword">return</span> None
+
+    <span class="keyword">def</span> <span class="function">read_table</span>(<span class="keyword">self</span>, table_name: str,
+                   where: str = <span class="string">""</span>, max_rows: int = <span class="number">1000</span>) → List[Dict]:
+        <span class="string">"""Lê dados de uma tabela SAP"""</span>
+        <span class="keyword">try</span>:
+            result = <span class="keyword">self</span>.conn.call(<span class="string">'RFC_READ_TABLE'</span>,
+                QUERY_TABLE=table_name,
+                ROWCOUNT=max_rows,
+                WHERE=[{<span class="string">"TEXT"</span>: where}] <span class="keyword">if</span> where <span class="keyword">else</span> []
+            )
+            <span class="keyword">return</span> result.get(<span class="string">"DATA"</span>, [])
+        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:
+            logger.error(<span class="string">f"✗ Failed to read table {table_name}: {e}"</span>)
+            <span class="keyword">return</span> []
+
+    <span class="keyword">def</span> <span class="function">get_bapi_info</span>(<span class="keyword">self</span>, bapi_name: str) → Dict:
+        <span class="string">"""Retorna documentação de um BAPI"""</span>
+        <span class="keyword">try</span>:
+            result = <span class="keyword">self</span>.conn.call(<span class="string">'BAPI_QUERY_IOBJECT'</span>,
+                IOBJECT_NAME=bapi_name,
+                IOBJECT_TYPE=<span class="string">'M'</span>
+            )
+            <span class="keyword">return</span> result
+        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:
+            logger.error(<span class="string">f"✗ Failed to get BAPI {bapi_name}: {e}"</span>)
+            <span class="keyword">return</span> None
+                </div>
+
+                <h3>Enriquecimento de Links SAP</h3>
+                <div class="code-block">
+<span class="keyword">class</span> <span class="function">SAPEnricher</span>:
+    <span class="string">"""Enriquece links com dados SAP"""</span>
+
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>):
+        <span class="keyword">self</span>.sap = SAPClient()
+
+    <span class="keyword">def</span> <span class="function">enrich_mm_link</span>(<span class="keyword">self</span>, link: Dict) → Dict:
+        <span class="string">"""Enriquece link de MM (Materiais)"""</span>
+        materials = <span class="keyword">self</span>.sap.read_table(
+            <span class="string">"MARA"</span>,
+            where=<span class="string">"MTART = 'FERT'"</span>,
+            max_rows=<span class="number">100</span>
+        )
+
+        <span class="keyword">return</span> {
+            **link,
+            <span class="string">"sap_module"</span>: <span class="string">"MM"</span>,
+            <span class="string">"sap_tables"</span>: [<span class="string">"MARA"</span>, <span class="string">"MARV"</span>, <span class="string">"MARC"</span>],
+            <span class="string">"sap_materials_sample"</span>: len(materials),
+            <span class="string">"sap_enriched_at"</span>: datetime.utcnow(),
+        }
+
+    <span class="keyword">def</span> <span class="function">enrich_fi_link</span>(<span class="keyword">self</span>, link: Dict) → Dict:
+        <span class="string">"""Enriquece link de FI (Financeiro)"""</span>
+        <span class="keyword">return</span> {
+            **link,
+            <span class="string">"sap_module"</span>: <span class="string">"FI"</span>,
+            <span class="string">"sap_tables"</span>: [<span class="string">"BKPF"</span>, <span class="string">"BSEG"</span>, <span class="string">"SKB1"</span>],
+            <span class="string">"sap_enriched_at"</span>: datetime.utcnow(),
+        }
+                </div>
+
+                <h3>Task de Sincronização SAP</h3>
+                <div class="code-block">
+@shared_task(bind=<span class="keyword">True</span>, max_retries=<span class="number">2</span>)
+<span class="keyword">def</span> <span class="function">enrich_link_with_sap</span>(self, link_id: int, sap_module: str):
+    <span class="string">"""Enriquece link com dados SAP"""</span>
+    <span class="keyword">try</span>:
+        link = db.query(Link).filter(Link.id == link_id).first()
+        <span class="keyword">if</span> <span class="keyword">not</span> link:
+            <span class="keyword">return</span>
+
+        enricher = SAPEnricher()
+
+        <span class="keyword">if</span> sap_module == <span class="string">"MM"</span>:
+            enriched = enricher.enrich_mm_link(link.to_dict())
+        <span class="keyword">elif</span> sap_module == <span class="string">"FI"</span>:
+            enriched = enricher.enrich_fi_link(link.to_dict())
+        <span class="keyword">else</span>:
+            <span class="keyword">return</span>
+
+        <span class="comment"># Save enrichment data</span>
+        link.sap_data = json.dumps(enriched)
+        link.sap_module = sap_module
+        db.commit()
+
+        logger.info(<span class="string">f"✓ Enriched link {link_id} with SAP data"</span>)
+
+    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:
+        logger.error(<span class="string">f"✗ Failed to enrich link {link_id}: {e}"</span>)
+        <span class="keyword">self</span>.retry(exc=e, countdown=<span class="number">120</span>)
+                </div>
+
+                <h3>Endpoints da API para SAP</h3>
+                <div class="endpoint">
+                    <span class="endpoint-method">GET</span>
+                    <span class="endpoint-path">/api/integrations/sap/tables</span>
+                </div>
+                <p>Lista tabelas SAP disponíveis para consulta</p>
+
+                <div class="endpoint">
+                    <span class="endpoint-method">POST</span>
+                    <span class="endpoint-path">/api/integrations/sap/enrich/{link_id}</span>
+                </div>
+                <p>Enriquece um link com dados SAP específicos</p>
+
+                <div class="error">
+                    <strong>⚠️ Limitações SAP</strong><br/>
+                    • RFC lento para tabelas muito grandes (use filtros WHERE)<br/>
+                    • Conexão requer VPN/firewall configurado<br/>
+                    • RFC_READ_TABLE tem limite de 1000 linhas (ajustável com ROWCOUNT)<br/>
+                    • Dados sensíveis (HR) requerem auditoria LGPD
+                </div>
+
+                <div class="success">
+                    <strong>✓ Vantagens da Integração SAP</strong><br/>
+                    • Contexto completo de dados MM/FI/HR em tempo real<br/>
+                    • Links automaticamente categorizados por módulo SAP<br/>
+                    • Reduz necessidade de copiar dados manualmente<br/>
+                    • Rastreabilidade completa de documentação SAP
+                </div>
+            </section>
+
+            <!-- SEÇÃO 4: SEGURANÇA -->
+            <section id="security">
+                <h2>4️⃣ Segurança & Autenticação</h2>
+
+                <h3>OAuth2 para Integrações</h3>
+                <div class="code-block">
+# app/api/integrations/auth.py
+<span class="keyword">from</span> fastapi <span class="keyword">import</span> APIRouter, Depends, HTTPException
+<span class="keyword">from</span> fastapi.security <span class="keyword">import</span> OAuth2PasswordBearer
+
+router = APIRouter(prefix=<span class="string">"/api/integrations"</span>)
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=<span class="string">"token"</span>)
+
+<span class="keyword">def</span> <span class="function">get_current_user</span>(token: str = Depends(oauth2_scheme)):
+    <span class="string">"""Valida token JWT do usuário"""</span>
+    <span class="keyword">try</span>:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[<span class="string">"HS256"</span>])
+        user_id = payload.get(<span class="string">"sub"</span>)
+        <span class="keyword">if</span> <span class="keyword">not</span> user_id:
+            <span class="keyword">raise</span> HTTPException(status_code=<span class="number">401</span>)
+        <span class="keyword">return</span> user_id
+    <span class="keyword">except</span> jwt.InvalidTokenError:
+        <span class="keyword">raise</span> HTTPException(status_code=<span class="number">401</span>)
+                </div>
+
+                <h3>Criptografia de Credenciais</h3>
+                <div class="code-block">
+# Armazenar credenciais seguras
+<span class="keyword">from</span> cryptography.fernet <span class="keyword">import</span> Fernet
+
+<span class="keyword">class</span> <span class="function">SecretStore</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>):
+        <span class="keyword">self</span>.cipher = Fernet(os.getenv(<span class="string">"ENCRYPTION_KEY"</span>))
+
+    <span class="keyword">def</span> <span class="function">encrypt</span>(<span class="keyword">self</span>, data: str) → str:
+        <span class="keyword">return</span> <span class="keyword">self</span>.cipher.encrypt(data.encode()).decode()
+
+    <span class="keyword">def</span> <span class="function">decrypt</span>(<span class="keyword">self</span>, encrypted: str) → str:
+        <span class="keyword">return</span> <span class="keyword">self</span>.cipher.decrypt(encrypted.encode()).decode()
+
+# Armazenar no DB
+class IntegrationConfig(Base):
+    __tablename__ = <span class="string">"integration_configs"</span>
+
+    id = Column(Integer, primary_key=True)
+    integration_type = Column(String(<span class="number">50</span>))  # "odoo", "sap"
+    user_id = Column(Integer, ForeignKey(<span class="string">"users.id"</span>))
+    encrypted_config = Column(Text)  # Criptografado
+                </div>
+
+                <h3>Rate Limiting</h3>
+                <div class="code-block">
+# app/middleware/rate_limit.py
+<span class="keyword">from</span> slowapi <span class="keyword">import</span> Limiter
+
+limiter = Limiter(key_func=get_remote_address)
+
+<span class="comment"># Limitar requisições SAP (caro)</span>
+@limiter.limit(<span class="string">"10/minute"</span>)
+@router.post(<span class="string">"/api/integrations/sap/enrich/{link_id}"</span>)
+<span class="keyword">async</span> <span class="keyword">def</span> <span class="function">enrich_link</span>(link_id: int):
+    <span class="keyword">pass</span>
+
+<span class="comment"># Limitar Odoo (médio)</span>
+@limiter.limit(<span class="string">"30/minute"</span>)
+@router.post(<span class="string">"/api/integrations/odoo/sync/{link_id}"</span>)
+<span class="keyword">async</span> <span class="keyword">def</span> <span class="function">sync_odoo</span>(link_id: int):
+    <span class="keyword">pass</span>
+                </div>
+
+                <h3>Audit Logging</h3>
+                <div class="code-block">
+# app/models.py - Audit table
+<span class="keyword">class</span> <span class="function">IntegrationAudit</span>(Base):
+    __tablename__ = <span class="string">"integration_audit"</span>
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer)
+    integration_type = Column(String(<span class="number">50</span>))
+    action = Column(String(<span class="number">50</span>))  # "sync", "enrich", "read"
+    resource_id = Column(Integer)
+    status = Column(String(<span class="number">20</span>))  # "success", "error"
+    details = Column(Text)  # JSON com detalhes
+    created_at = Column(DateTime, default=datetime.utcnow)
+                </div>
+            </section>
+
+            <!-- SEÇÃO 5: TRATAMENTO DE ERROS -->
+            <section id="error">
+                <h2>5️⃣ Tratamento de Erros & Retry</h2>
+
+                <table class="table">
+                    <tr>
+                        <th>Erro</th>
+                        <th>Causa</th>
+                        <th>Solução</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Connection Timeout</strong></td>
+                        <td>Odoo/SAP inacessível</td>
+                        <td>Retry com exponential backoff (60s, 2m, 5m)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Auth Failed</strong></td>
+                        <td>Credenciais inválidas</td>
+                        <td>Alertar admin, desabilitar integração</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rate Limit</strong></td>
+                        <td>Muitas requisições</td>
+                        <td>Colocar na fila com delay maior</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Data Sync Conflict</strong></td>
+                        <td>Link deletado enquanto sincroniza</td>
+                        <td>Log de conflict, rollback na origem</td>
+                    </tr>
+                </table>
+
+                <h3>Implementação de Retry</h3>
+                <div class="code-block">
+<span class="keyword">from</span> tenacity <span class="keyword">import</span> (
+    retry,
+    stop_after_attempt,
+    wait_exponential,
+    retry_if_exception_type
+)
+
+@retry(
+    stop=stop_after_attempt(<span class="number">3</span>),
+    wait=wait_exponential(multiplier=<span class="number">1</span>, min=<span class="number">4</span>, max=<span class="number">10</span>),
+    retry=retry_if_exception_type((ConnectionError, TimeoutError))
+)
+<span class="keyword">def</span> <span class="function">sync_with_odoo</span>(link_id: int):
+    odoo = OdooClient()
+    <span class="comment"># Sync logic</span>
+    <span class="keyword">pass</span>
+                </div>
+            </section>
+
+            <!-- SEÇÃO 6: DEPLOYMENT -->
+            <section id="deploy">
+                <h2>6️⃣ Deployment & Monitoramento</h2>
+
+                <h3>Docker Compose para Integrações</h3>
+                <div class="code-block">
+version: <span class="string">'3.8'</span>
+
+services:
+  app:
+    build: .
+    environment:
+      - ODOO_URL=https://odoo.empresa.com.br
+      - SAP_ASHOST=192.168.1.100
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+      - postgres
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - <span class="string">"6379:6379"</span>
+
+  celery:
+    build: .
+    command: celery -A app.workers.celery worker --loglevel=info
+    environment:
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+      - app
+
+  celery-beat:
+    build: .
+    command: celery -A app.workers.celery beat --loglevel=info
+    depends_on:
+      - redis
+                </div>
+
+                <h3>Monitoramento & Alertas</h3>
+                <div class="code-block">
+# app/monitoring/integrations.py
+<span class="keyword">import</span> prometheus_client
+
+<span class="comment"># Métricas Prometheus</span>
+sync_counter = prometheus_client.Counter(
+    <span class="string">'integration_syncs_total'</span>,
+    <span class="string">'Total syncs'</span>,
+    [<span class="string">'integration'</span>, <span class="string">'status'</span>]
+)
+
+sync_duration = prometheus_client.Histogram(
+    <span class="string">'integration_sync_duration_seconds'</span>,
+    <span class="string">'Sync duration'</span>,
+    [<span class="string">'integration'</span>]
+)
+
+<span class="keyword">def</span> <span class="function">track_sync</span>(integration: str, status: str, duration: float):
+    sync_counter.labels(integration, status).inc()
+    sync_duration.labels(integration).observe(duration)
+                </div>
+
+                <h3>Health Check Endpoints</h3>
+                <div class="endpoint">
+                    <span class="endpoint-method">GET</span>
+                    <span class="endpoint-path">/api/integrations/health</span>
+                </div>
+                <div class="code-block">
+{
+  <span class="string">"odoo"</span>: {
+    <span class="string">"status"</span>: <span class="string">"ok"</span>,
+    <span class="string">"last_sync"</span>: <span class="string">"2026-08-21T10:30:00Z"</span>,
+    <span class="string">"response_time_ms"</span>: <span class="number">245</span>
+  },
+  <span class="string">"sap"</span>: {
+    <span class="string">"status"</span>: <span class="string">"ok"</span>,
+    <span class="string">"last_sync"</span>: <span class="string">"2026-08-21T11:00:00Z"</span>,
+    <span class="string">"response_time_ms"</span>: <span class="number">1200</span>
+  }
+}
+                </div>
+            </section>
+
+            <!-- RESUMO -->
+            <section>
+                <h2>📋 Resumo de Implementação</h2>
+
+                <table class="table">
+                    <tr>
+                        <th>Integração</th>
+                        <th>Complexidade</th>
+                        <th>Tempo Estimado</th>
+                        <th>Prioridade</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Odoo CRM</strong></td>
+                        <td>Média</td>
+                        <td>40-50h</td>
+                        <td>🔴 Alta (Vendas)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SAP-GUI</strong></td>
+                        <td>Alta</td>
+                        <td>60-80h</td>
+                        <td>🔴 Alta (Estratégica)</td>
+                    </tr>
+                </table>
+
+                <div class="warning">
+                    <strong>⚠️ Dependências Críticas</strong><br/>
+                    1. Redis instalado e rodando<br/>
+                    2. Celery configurado para tasks assíncronas<br/>
+                    3. Credenciais de Odoo/SAP validadas<br/>
+                    4. Networking/firewall para conectar aos sistemas<br/>
+                    5. Certificados SSL válidos (se HTTPS)
+                </div>
+            </section>
+        </div>
+
+        <div class="footer">
+            <p><strong>Banco de Links - Integrations Technical Specification</strong></p>
+            <p>Agosto 2026 | Para Arquitetos & Desenvolvedores | v1.0</p>
+        </div>
+    </div>
+</body>
+</html>
