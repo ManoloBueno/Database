@@ -13,27 +13,99 @@ client = Anthropic()
 logger = logging.getLogger(__name__)
 
 # Model configuration
-MODEL = "claude-opus-4-8"  # Latest, most capable model
+MODEL = "claude-3-5-fable-20241022"  # Most cost-efficient model (10x cheaper than Opus)
 
 # Track API usage for monitoring
 API_CALL_COUNT = 0
 API_TOKENS_USED = 0
 
-# Cache de categorias para evitar chamadas desnecessárias
+# Cache de categorias padrão (15 categorias)
 COMMON_CATEGORIES = {
-    "tecnologia": "Tecnologia",
-    "educação": "Educação",
-    "programação": "Programação",
-    "desenvolvimento": "Desenvolvimento",
-    "ia": "IA",
-    "machine learning": "IA",
-    "python": "Programação",
-    "javascript": "Programação",
-    "react": "Programação",
-    "typescript": "Programação",
-    "github": "Programação",
-    "youtube": "Educação",
-    "medium": "Educação",
+    # Tech
+    "tech": "Tech",
+    "technology": "Tech",
+    "tecnologia": "Tech",
+    "programming": "Tech",
+    "desenvolviment": "Tech",
+    "software": "Tech",
+    "framework": "Tech",
+    # AI
+    "ia": "AI",
+    "ai": "AI",
+    "artificial intelligence": "AI",
+    "machine learning": "AI",
+    "deep learning": "AI",
+    "gpt": "AI",
+    "neural": "AI",
+    # Food
+    "food": "Food",
+    "receita": "Food",
+    "comida": "Food",
+    "cooking": "Food",
+    "cozinha": "Food",
+    "gastronomi": "Food",
+    "chef": "Food",
+    # Video
+    "video": "Video",
+    "youtube": "Video",
+    "vimeo": "Video",
+    "vídeo": "Video",
+    "canal": "Video",
+    # Social Media
+    "social": "Social Media",
+    "linkedin": "Social Media",
+    "facebook": "Social Media",
+    "instagram": "Social Media",
+    "twitter": "Social Media",
+    "tiktok": "Social Media",
+    # News
+    "news": "News",
+    "notícia": "News",
+    "blog": "News",
+    "artigo": "News",
+    "medium": "News",
+    "dev.to": "News",
+    # Business
+    "business": "Business",
+    "negócios": "Business",
+    "empresa": "Business",
+    "startup": "Business",
+    # Education
+    "education": "Education",
+    "educação": "Education",
+    "course": "Education",
+    "cursos": "Education",
+    "tutorial": "Education",
+    # Health
+    "health": "Health",
+    "saúde": "Health",
+    "fitness": "Health",
+    "wellness": "Health",
+    # Design
+    "design": "Design",
+    "ux": "Design",
+    "ui": "Design",
+    "figma": "Design",
+    # Marketing
+    "marketing": "Marketing",
+    "advertising": "Marketing",
+    "publicidade": "Marketing",
+    # Finance
+    "finance": "Finance",
+    "finança": "Finance",
+    "banking": "Finance",
+    "crypto": "Finance",
+    # Lifestyle
+    "lifestyle": "Lifestyle",
+    "travel": "Lifestyle",
+    "viagem": "Lifestyle",
+    "fashion": "Lifestyle",
+    # Entertainment
+    "entertainment": "Entertainment",
+    "games": "Entertainment",
+    "jogos": "Entertainment",
+    "humor": "Entertainment",
+    "music": "Entertainment",
 }
 
 
@@ -105,30 +177,27 @@ async def categorize_link(url: str, titulo: str = "", resumo: str = "") -> dict:
             "confiabilidade": "Média"
         }
 
-    # Use Claude for smart categorization with improved prompt
-    prompt = f"""Analise este link e categorize-o. Responda em português do Brasil.
+    # Use Claude for smart categorization with 15 standard categories
+    prompt = f"""Categorize este link com UMA das 15 categorias padrao. Responda em português.
 
 URL: {url}
 Título: {titulo}
 Resumo: {resumo}
 
-Responda APENAS com este JSON (sem markdown, sem texto extra, em português):
+Categorias disponiveis: Tech, AI, Food, Video, Social Media, News, Business, Education, Health, Design, Marketing, Finance, Lifestyle, Entertainment, Other
+
+Responda APENAS com JSON (sem markdown, sem texto extra):
 {{
-    "categoria": "Deve ser uma de: Tecnologia, Educação, Programação, Desenvolvimento, IA, Marketing, Negócios, Saúde, Jurídico, Finanças, Outro",
-    "tema": "Tema principal em 2-3 palavras em português, sem abreviar (ex: 'Python', 'Machine Learning', 'Design de API')",
-    "confiabilidade": "Alta, Média ou Baixa baseado na qualidade da URL"
+    "categoria": "Uma das 15 acima (use exatamente como escrito)",
+    "tema": "Tema em 2-3 palavras (ex: 'Python', 'Machine Learning')",
+    "confiabilidade": "Alta, Média ou Baixa"
 }}
 
-Dicas:
-- Sites oficiais de linguagens de programação (python.org, nodejs.org, etc.) → categoria "Programação"
-- Repositórios, bibliotecas e SDKs de código → categoria "Programação" ou "Desenvolvimento"
-- Modelos de IA, LLMs, APIs de IA → categoria "IA"
-- O tema deve ser específico e nunca abreviado. Não use "Ia" como tema.
-
 Exemplos:
-- https://github.com/openai/gpt-4 → {{"categoria": "IA", "tema": "GPT-4", "confiabilidade": "Alta"}}
-- https://www.python.org → {{"categoria": "Programação", "tema": "Python", "confiabilidade": "Alta"}}
-- https://medium.com/python-tips → {{"categoria": "Programação", "tema": "Python", "confiabilidade": "Média"}}"""
+- github.com/openai/gpt-4 → {{"categoria": "AI", "tema": "GPT-4", "confiabilidade": "Alta"}}
+- python.org → {{"categoria": "Tech", "tema": "Python", "confiabilidade": "Alta"}}
+- medium.com/tutorial → {{"categoria": "Education", "tema": "Python Tutorial", "confiabilidade": "Média"}}
+- linkedin.com/post → {{"categoria": "Social Media", "tema": "Professional Network", "confiabilidade": "Alta"}}"""
 
     try:
         message = client.messages.create(
