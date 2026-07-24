@@ -12,12 +12,10 @@ from collections import defaultdict
 # Try to use psycopg2 for PostgreSQL
 try:
     import psycopg2
-    from psycopg2.extras import RealDictCursor
 except ImportError:
     print("Instalando psycopg2...")
     os.system("pip install psycopg2-binary")
     import psycopg2
-    from psycopg2.extras import RealDictCursor
 
 # CATEGORIAS PADRAO (15 principais)
 CATEGORIAS_PADRAO = {
@@ -102,7 +100,7 @@ def sincronizar_banco():
         return False
 
     try:
-        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        cursor = conn.cursor()
 
         # FASE 1: Agrupar
         print("\nFASE 1: Agrupando categorias...")
@@ -114,7 +112,7 @@ def sincronizar_banco():
             cat_padrao = agrupar_categoria_local(cat_original)
             mapeamento[cat_original] = cat_padrao
 
-        print(f"  ✓ {len(categorias_originais)} categorias agrupadas")
+        print(f"  OK: {len(categorias_originais)} categorias agrupadas")
 
         # FASE 2: Atualizar
         print("\nFASE 2: Atualizando banco...")
@@ -131,7 +129,7 @@ def sincronizar_banco():
                     total_updated += count
 
         conn.commit()
-        print(f"  ✓ {total_updated} links atualizados")
+        print(f"  OK: {total_updated} links atualizados")
 
         # FASE 3: Relatorio
         print("\nFASE 3: Relatorio final")
@@ -146,8 +144,8 @@ def sincronizar_banco():
 
         total = 0
         for row in cursor.fetchall():
-            cat = row['categoria'] or 'NULL'
-            count = row['count']
+            cat = row[0] or 'NULL'
+            count = row[1]
             print(f"  {cat}: {count}")
             total += count
 
@@ -158,13 +156,13 @@ def sincronizar_banco():
         conn.close()
 
         print("\n" + "=" * 70)
-        print("SUCESSO! Banco sincronizado com 15 categorias padrao")
+        print("OK! Banco sincronizado com 15 categorias padrao")
         print("=" * 70)
 
         return True
 
     except Exception as e:
-        print(f"\n❌ Erro: {e}")
+        print(f"\nErro: {e}")
         conn.close()
         return False
 
